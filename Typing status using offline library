@@ -1,0 +1,24 @@
+// Custom typing info header bar
+val nobodyTyping = "nobody is typing"
+binding.typingHeaderView.text = nobodyTyping
+
+// Obtain a ChannelController
+ChatDomain
+    .instance()
+    .useCases
+    .getChannelController(cid)
+    .enqueue { channelControllerResult ->
+        if (channelControllerResult.isSuccess) {
+            // Observe typing users
+            channelControllerResult.data().typing.observe(this) { typingState ->
+                binding.typingHeaderView.text = when {
+
+                    typingState.users.isNotEmpty() -> {
+                        typingState.users.joinToString(prefix = "typing: ") { user -> user.name }
+                    }
+
+                    else -> nobodyTyping
+                }
+            }
+        }
+    }
