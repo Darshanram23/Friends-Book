@@ -1,0 +1,2 @@
+// Set view factory for Imgur attachments
+binding.messageListView.setAttachmentViewFactory(ImgurAttachmentViewFactory())
