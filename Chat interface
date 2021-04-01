@@ -1,0 +1,3 @@
+binding.channelListView.setChannelItemClickListener { channel ->
+    startActivity(ChannelActivity.newIntent(this, channel))
+}
