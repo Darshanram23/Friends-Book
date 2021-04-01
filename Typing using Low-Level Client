@@ -1,0 +1,23 @@
+// Custom typing info header bar
+val nobodyTyping = "nobody is typing"
+binding.typingHeaderView.text = nobodyTyping
+
+val currentlyTyping = mutableSetOf<String>()
+
+// Observe raw events through the low-level client
+ChatClient
+    .instance()
+    .channel(cid)
+    .subscribeFor(
+        this, TypingStartEvent::class, TypingStopEvent::class
+    ) { event ->
+        when (event) {
+            is TypingStartEvent -> currentlyTyping.add(event.user.name)
+            is TypingStopEvent -> currentlyTyping.remove(event.user.name)
+        }
+
+        binding.typingHeaderView.text = when {
+            currentlyTyping.isNotEmpty() -> currentlyTyping.joinToString(prefix = "typing: ")
+            else -> nobodyTyping
+        }
+    }
